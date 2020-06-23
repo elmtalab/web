@@ -1,0 +1,10 @@
+.idea/
+
+db.sqlite3
+
+
+files/
+
+__pycache__/
+
+venv/

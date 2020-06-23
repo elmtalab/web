@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  webhook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/BTCwebhook
+      - BTCwebhook_static_volume:/webhooktest/static
+      - BTCwebhook_files_volume:/webhooktest/files
+    restart: always
+    ports:
+      - "8000:8000"
+    networks:
+      - BTCwebhook_network
+      - nginx_network
+    depends_on:
+      - BTCwebhook_postgresql
+  BTCwebhook_postgresql:
+    image: postgres:12
+    container_name: BTCwebhook_postgresql
+    volumes:
+      - BTCwebhook_postgresql:/var/lib/postgresql/data
+    restart: always
+    env_file: .env
+    ports:
+      - "5432:5432"
+    networks:
+      - BTCwebhook_network
+
+volumes:
+  BTCwebhook_postgresql:
+    external: true
+  BTCwebhook_static_volume:
+    external: true
+  BTCwebhook_files_volume:
+    external: true
+networks:
+  BTCwebhook_network:
+    external: true
+  nginx_network:
+    external: true
